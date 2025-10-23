@@ -1,4 +1,3 @@
-@tool
 class_name DocumentConfig
 extends Resource
 
@@ -10,36 +9,34 @@ enum TileTypes {
 	HEXAGON_VERTICAL,
 	ISOMETRIC}
 
-@export var tile_outer_aab :Vector2i:
-	set(value):
-		if value != tile_outer_aab:
-			tile_outer_aab = value
-			_tile_inner_aab = _clamped_inner_aab(_tile_inner_aab)
-			emit_changed()
-			
-@export var tile_inner_aab :Rect2i:
-	set(value):
-		value = _clamped_inner_aab(value)
-		if value != _tile_inner_aab:
-			_tile_inner_aab = value
-			emit_changed()
-	get:
-		return _tile_inner_aab
-var _tile_inner_aab :Rect2i
 
 @export var tile_type :TileTypes:
 	set(value):
 		if value != tile_type:
 			tile_type = value
 			emit_changed()
-
-
-func _clamped_inner_aab(aab_in: Rect2i) -> Rect2i:
-	var clamped_position := aab_in.position.clamp(
-			Vector2i.ZERO, tile_outer_aab - Vector2i.ONE)
-	var aab_out := Rect2i(
-			clamped_position,
-			aab_in.size.clamp(
-					Vector2i.ONE,
-					tile_outer_aab - clamped_position))
-	return aab_out
+@export var tile_size: Vector2i:
+	set(value):
+		if value != tile_size:
+			tile_size = value
+			emit_changed()
+@export var margin_top: int:
+	set(value):
+		if value != margin_top:
+			margin_top = value
+			emit_changed()
+@export var margin_right: int:
+	set(value):
+		if value != margin_right:
+			margin_right = value
+			emit_changed()
+@export var margin_bottom: int:
+	set(value):
+		if value != margin_bottom:
+			margin_bottom = value
+			emit_changed()
+@export var margin_left: int:
+	set(value):
+		if value != margin_left:
+			margin_left = value
+			emit_changed()

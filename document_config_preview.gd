@@ -1,4 +1,3 @@
-@tool
 extends Panel
 
 const TILE_INNER_LINE_COLOR := Color.CRIMSON
@@ -13,7 +12,8 @@ func _ready() -> void:
 func _draw() -> void:
 	match config.tile_type:
 		DocumentConfig.TileTypes.SQUARE:
-			draw_tile_square()
+			#draw_tile_square()
+			pass
 		DocumentConfig.TileTypes.HALF_OFFSET_SQUARE_HORIZONTAL:
 			pass
 		DocumentConfig.TileTypes.HALF_OFFSET_SQUARE_VERTICAL:

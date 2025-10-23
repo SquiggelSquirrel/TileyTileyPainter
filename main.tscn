@@ -97,7 +97,7 @@ shape = SubResource("RectangleShape2D_7dm0k")
 oversampling_override = 1.0
 title = "New Image..."
 initial_position = 1
-size = Vector2i(439, 284)
+size = Vector2i(476, 290)
 wrap_controls = true
 script = ExtResource("1_h2yge")
 

@@ -1,13 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://dd62abvrwob6l"]
+[gd_scene load_steps=9 format=3 uid="uid://dd62abvrwob6l"]
 
 [ext_resource type="Script" uid="uid://y71t1nyojl0l" path="res://document_config_panel.gd" id="1_qn7uf"]
 [ext_resource type="Script" uid="uid://qrpxlba4k5rw" path="res://document_config.gd" id="2_d1icl"]
+[ext_resource type="Script" uid="uid://d1bq6vcfpo8d0" path="res://addons/spanning_table/spanning_table_container.gd" id="2_jtw0l"]
 [ext_resource type="Script" uid="uid://da2lt7saakbt0" path="res://document_config_preview.gd" id="2_qn7uf"]
+[ext_resource type="Script" uid="uid://bgyempry5d6vr" path="res://addons/spanning_table/spanning_cell_container.gd" id="3_cfcxd"]
+[ext_resource type="Script" uid="uid://c1helfll25hxl" path="res://document_config_panel/keep_aspect_ratio.gd" id="4_cfcxd"]
+[ext_resource type="Script" uid="uid://mh4sck7d7mhj" path="res://document_config_panel/link_margins.gd" id="5_ds5qy"]
 
 [sub_resource type="Resource" id="Resource_d1icl"]
 script = ExtResource("2_d1icl")
-tile_outer_aab = Vector2i(100, 100)
-tile_inner_aab = Rect2i(10, 10, 80, 80)
 metadata/_custom_type_script = "uid://qrpxlba4k5rw"
 
 [node name="DocumentConfigPanel" type="PanelContainer"]
@@ -42,15 +44,27 @@ popup/item_5/id = 5
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="Size" type="GridContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="SpanningTableContainer" type="Container" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
-columns = 2
+script = ExtResource("2_jtw0l")
+columns = 5
+metadata/_custom_type_script = "uid://d1bq6vcfpo8d0"
 
-[node name="ImageWidthLabel" type="Label" parent="VBoxContainer/HBoxContainer/Size"]
+[node name="FileFields" type="Container" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
 layout_mode = 2
-text = "Image Width"
+script = ExtResource("3_cfcxd")
+row_span = 2
+metadata/_custom_type_script = "uid://bgyempry5d6vr"
 
-[node name="ImageWidth" type="SpinBox" parent="VBoxContainer/HBoxContainer/Size"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/SpanningTableContainer/FileFields"]
+layout_mode = 2
+text = "Tile:"
+
+[node name="WidthLabel" type="Label" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
+layout_mode = 2
+text = "Width"
+
+[node name="Width" type="SpinBox" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 1.0
@@ -59,11 +73,28 @@ rounded = true
 alignment = 2
 suffix = "px"
 
-[node name="ImageHeightLabel" type="Label" parent="VBoxContainer/HBoxContainer/Size"]
+[node name="TileKeepAspect" type="Container" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
 layout_mode = 2
-text = "Image Height"
+script = ExtResource("3_cfcxd")
+col_span = 2
+row_span = 2
+metadata/_custom_type_script = "uid://bgyempry5d6vr"
 
-[node name="ImageHeight" type="SpinBox" parent="VBoxContainer/HBoxContainer/Size"]
+[node name="KeepAspectRatio" type="Button" parent="VBoxContainer/HBoxContainer/SpanningTableContainer/TileKeepAspect" node_paths=PackedStringArray("input_1", "input_2")]
+layout_mode = 2
+size_flags_horizontal = 0
+toggle_mode = true
+button_pressed = true
+text = "="
+script = ExtResource("4_cfcxd")
+input_1 = NodePath("../../Width")
+input_2 = NodePath("../../Height")
+
+[node name="HeightLabel" type="Label" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
+layout_mode = 2
+text = "Height"
+
+[node name="Height" type="SpinBox" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 1.0
@@ -72,59 +103,113 @@ rounded = true
 alignment = 2
 suffix = "px"
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer/Size"]
+[node name="Separator" type="Container" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
+layout_mode = 2
+script = ExtResource("3_cfcxd")
+col_span = 5
+metadata/_custom_type_script = "uid://bgyempry5d6vr"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer/SpanningTableContainer/Separator"]
 layout_mode = 2
 
-[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/HBoxContainer/Size"]
+[node name="MarginFields" type="Container" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
 layout_mode = 2
+script = ExtResource("3_cfcxd")
+row_span = 4
+metadata/_custom_type_script = "uid://bgyempry5d6vr"
 
-[node name="TileXLabel" type="Label" parent="VBoxContainer/HBoxContainer/Size"]
+[node name="Margins" type="Label" parent="VBoxContainer/HBoxContainer/SpanningTableContainer/MarginFields"]
 layout_mode = 2
-text = "Tile Position X"
+text = "Margins:"
 
-[node name="TilePositionX" type="SpinBox" parent="VBoxContainer/HBoxContainer/Size"]
-unique_name_in_owner = true
+[node name="TopLabel" type="Label" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
+layout_mode = 2
+text = "Top"
+
+[node name="MarginTop" type="SpinBox" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
 layout_mode = 2
 rounded = true
 alignment = 2
 suffix = "px"
 
-[node name="TileYLabel" type="Label" parent="VBoxContainer/HBoxContainer/Size"]
+[node name="VerticalLink" type="Container" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
 layout_mode = 2
-text = "Tile Position Y"
+script = ExtResource("3_cfcxd")
+row_span = 2
+metadata/_custom_type_script = "uid://bgyempry5d6vr"
 
-[node name="TilePositionY" type="SpinBox" parent="VBoxContainer/HBoxContainer/Size"]
-unique_name_in_owner = true
+[node name="LinkVerticalMargins" type="Button" parent="VBoxContainer/HBoxContainer/SpanningTableContainer/VerticalLink" node_paths=PackedStringArray("input_1", "input_2")]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "="
+script = ExtResource("4_cfcxd")
+input_1 = NodePath("../../MarginTop")
+input_2 = NodePath("../../MarginBottom")
+
+[node name="MarginsLink" type="Container" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
+layout_mode = 2
+script = ExtResource("3_cfcxd")
+row_span = 4
+metadata/_custom_type_script = "uid://bgyempry5d6vr"
+
+[node name="LinkMargins" type="Button" parent="VBoxContainer/HBoxContainer/SpanningTableContainer/MarginsLink" node_paths=PackedStringArray("button1", "button2")]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "=
+"
+script = ExtResource("5_ds5qy")
+button1 = NodePath("../../VerticalLink/LinkVerticalMargins")
+button2 = NodePath("../../HorizontalLink/LinkHorizontalMargins")
+
+[node name="Bottom" type="Label" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
+layout_mode = 2
+text = "Bottom"
+
+[node name="MarginBottom" type="SpinBox" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
 layout_mode = 2
 rounded = true
 alignment = 2
 suffix = "px"
 
-[node name="TileWidthLabel" type="Label" parent="VBoxContainer/HBoxContainer/Size"]
+[node name="LeftLabel" type="Label" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
 layout_mode = 2
-text = "Tile Width"
+text = "Left"
 
-[node name="TileWidth" type="SpinBox" parent="VBoxContainer/HBoxContainer/Size"]
-unique_name_in_owner = true
+[node name="MarginLeft" type="SpinBox" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
 layout_mode = 2
-min_value = 1.0
-value = 64.0
 rounded = true
 alignment = 2
 suffix = "px"
 
-[node name="TileHeightLabel" type="Label" parent="VBoxContainer/HBoxContainer/Size"]
+[node name="HorizontalLink" type="Container" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
 layout_mode = 2
-text = "Tile Height"
+script = ExtResource("3_cfcxd")
+row_span = 2
+metadata/_custom_type_script = "uid://bgyempry5d6vr"
 
-[node name="TileHeight" type="SpinBox" parent="VBoxContainer/HBoxContainer/Size"]
-unique_name_in_owner = true
+[node name="LinkHorizontalMargins" type="Button" parent="VBoxContainer/HBoxContainer/SpanningTableContainer/HorizontalLink" node_paths=PackedStringArray("input_1", "input_2")]
 layout_mode = 2
-min_value = 1.0
-value = 64.0
+toggle_mode = true
+button_pressed = true
+text = "="
+script = ExtResource("4_cfcxd")
+input_1 = NodePath("../../MarginLeft")
+input_2 = NodePath("../../MarginRight")
+
+[node name="RightLabel" type="Label" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
+layout_mode = 2
+text = "Right"
+
+[node name="MarginRight" type="SpinBox" parent="VBoxContainer/HBoxContainer/SpanningTableContainer"]
+layout_mode = 2
 rounded = true
 alignment = 2
 suffix = "px"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
 
 [node name="AspectRatioContainer" type="AspectRatioContainer" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
