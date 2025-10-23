@@ -10,33 +10,21 @@ enum TileTypes {
 	ISOMETRIC}
 
 
-@export var tile_type :TileTypes:
-	set(value):
-		if value != tile_type:
-			tile_type = value
-			emit_changed()
-@export var tile_size: Vector2i:
-	set(value):
-		if value != tile_size:
-			tile_size = value
-			emit_changed()
-@export var margin_top: int:
-	set(value):
-		if value != margin_top:
-			margin_top = value
-			emit_changed()
-@export var margin_right: int:
-	set(value):
-		if value != margin_right:
-			margin_right = value
-			emit_changed()
-@export var margin_bottom: int:
-	set(value):
-		if value != margin_bottom:
-			margin_bottom = value
-			emit_changed()
-@export var margin_left: int:
-	set(value):
-		if value != margin_left:
-			margin_left = value
-			emit_changed()
+@export var tile_type := TileTypes.SQUARE
+@export var tile_size := Vector2i.ONE
+@export var margin_top :int = 0
+@export var margin_right :int = 0
+@export var margin_bottom :int = 0
+@export var margin_left :int = 0
+
+
+func get_tile_outer_size() -> Vector2i:
+	return tile_size + Vector2i(
+			margin_left + margin_right,
+			margin_top + margin_bottom)
+
+
+func get_tile_inner_aab() -> Rect2i:
+	return Rect2i(
+			Vector2i(margin_left, margin_top),
+			tile_size)
