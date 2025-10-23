@@ -1,0 +1,106 @@
+[gd_scene load_steps=4 format=3 uid="uid://cig0wf8uw1fp"]
+
+[ext_resource type="Script" uid="uid://cxxxqilll2pmm" path="res://new_document_window.gd" id="1_h2yge"]
+[ext_resource type="PackedScene" uid="uid://dd62abvrwob6l" path="res://document_config_panel.tscn" id="2_0xm2m"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7dm0k"]
+
+[node name="Main" type="Node"]
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuBar" type="PanelContainer" parent="UI/VBoxContainer"]
+layout_mode = 2
+
+[node name="HFlowContainer" type="HFlowContainer" parent="UI/VBoxContainer/MenuBar"]
+layout_mode = 2
+
+[node name="File" type="MenuButton" parent="UI/VBoxContainer/MenuBar/HFlowContainer"]
+layout_mode = 2
+text = "File"
+item_count = 6
+popup/item_0/text = "New"
+popup/item_0/id = 0
+popup/item_1/text = "Open"
+popup/item_1/id = 1
+popup/item_2/text = "Save"
+popup/item_2/id = 2
+popup/item_3/text = "Save As..."
+popup/item_3/id = 3
+popup/item_4/id = 7
+popup/item_4/separator = true
+popup/item_5/text = "Exit"
+popup/item_5/id = 8
+
+[node name="VSeparator" type="VSeparator" parent="UI/VBoxContainer/MenuBar/HFlowContainer"]
+layout_mode = 2
+
+[node name="BrushLabel" type="Label" parent="UI/VBoxContainer/MenuBar/HFlowContainer"]
+layout_mode = 2
+text = "Brush"
+
+[node name="SpinBox" type="SpinBox" parent="UI/VBoxContainer/MenuBar/HFlowContainer"]
+layout_mode = 2
+min_value = 1.0
+value = 1.0
+rounded = true
+alignment = 2
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="UI/VBoxContainer/MenuBar/HFlowContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="UI/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SubViewport" type="SubViewport" parent="UI/VBoxContainer/SubViewportContainer"]
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="WorkArea" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport"]
+
+[node name="Camera2D" type="Camera2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea"]
+
+[node name="WrapShadow" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea"]
+
+[node name="Layers" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea"]
+
+[node name="LayerGroup" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea/Layers"]
+
+[node name="PaintLayer" type="Sprite2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea/Layers"]
+centered = false
+
+[node name="Guides" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea"]
+
+[node name="InputArea" type="Area2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea/InputArea"]
+shape = SubResource("RectangleShape2D_7dm0k")
+
+[node name="NewDocumentWindow" type="Window" parent="UI"]
+oversampling_override = 1.0
+title = "New Image..."
+initial_position = 1
+size = Vector2i(439, 284)
+wrap_controls = true
+script = ExtResource("1_h2yge")
+
+[node name="DocumentConfigPanel" parent="UI/NewDocumentWindow" instance=ExtResource("2_0xm2m")]
+
+[connection signal="about_to_popup" from="UI/NewDocumentWindow" to="UI/NewDocumentWindow" method="_on_about_to_popup"]

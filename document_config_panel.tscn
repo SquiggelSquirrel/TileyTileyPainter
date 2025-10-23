@@ -1,0 +1,149 @@
+[gd_scene load_steps=5 format=3 uid="uid://dd62abvrwob6l"]
+
+[ext_resource type="Script" uid="uid://y71t1nyojl0l" path="res://document_config_panel.gd" id="1_qn7uf"]
+[ext_resource type="Script" uid="uid://qrpxlba4k5rw" path="res://document_config.gd" id="2_d1icl"]
+[ext_resource type="Script" uid="uid://da2lt7saakbt0" path="res://document_config_preview.gd" id="2_qn7uf"]
+
+[sub_resource type="Resource" id="Resource_d1icl"]
+script = ExtResource("2_d1icl")
+tile_outer_aab = Vector2i(100, 100)
+tile_inner_aab = Rect2i(10, 10, 80, 80)
+metadata/_custom_type_script = "uid://qrpxlba4k5rw"
+
+[node name="DocumentConfigPanel" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qn7uf")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TileType" type="OptionButton" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 6
+popup/item_0/text = "Square"
+popup/item_0/id = 0
+popup/item_1/text = "Half-Offset Square Horizontal"
+popup/item_1/id = 1
+popup/item_2/text = "Half-Offset Square Vertical"
+popup/item_2/id = 2
+popup/item_3/text = "Horizontal Hexagon"
+popup/item_3/id = 3
+popup/item_4/text = "Vertical Hexagon"
+popup/item_4/id = 4
+popup/item_5/text = "Isometric Square"
+popup/item_5/id = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Size" type="GridContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="ImageWidthLabel" type="Label" parent="VBoxContainer/HBoxContainer/Size"]
+layout_mode = 2
+text = "Image Width"
+
+[node name="ImageWidth" type="SpinBox" parent="VBoxContainer/HBoxContainer/Size"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+value = 64.0
+rounded = true
+alignment = 2
+suffix = "px"
+
+[node name="ImageHeightLabel" type="Label" parent="VBoxContainer/HBoxContainer/Size"]
+layout_mode = 2
+text = "Image Height"
+
+[node name="ImageHeight" type="SpinBox" parent="VBoxContainer/HBoxContainer/Size"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+value = 64.0
+rounded = true
+alignment = 2
+suffix = "px"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer/Size"]
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/HBoxContainer/Size"]
+layout_mode = 2
+
+[node name="TileXLabel" type="Label" parent="VBoxContainer/HBoxContainer/Size"]
+layout_mode = 2
+text = "Tile Position X"
+
+[node name="TilePositionX" type="SpinBox" parent="VBoxContainer/HBoxContainer/Size"]
+unique_name_in_owner = true
+layout_mode = 2
+rounded = true
+alignment = 2
+suffix = "px"
+
+[node name="TileYLabel" type="Label" parent="VBoxContainer/HBoxContainer/Size"]
+layout_mode = 2
+text = "Tile Position Y"
+
+[node name="TilePositionY" type="SpinBox" parent="VBoxContainer/HBoxContainer/Size"]
+unique_name_in_owner = true
+layout_mode = 2
+rounded = true
+alignment = 2
+suffix = "px"
+
+[node name="TileWidthLabel" type="Label" parent="VBoxContainer/HBoxContainer/Size"]
+layout_mode = 2
+text = "Tile Width"
+
+[node name="TileWidth" type="SpinBox" parent="VBoxContainer/HBoxContainer/Size"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+value = 64.0
+rounded = true
+alignment = 2
+suffix = "px"
+
+[node name="TileHeightLabel" type="Label" parent="VBoxContainer/HBoxContainer/Size"]
+layout_mode = 2
+text = "Tile Height"
+
+[node name="TileHeight" type="SpinBox" parent="VBoxContainer/HBoxContainer/Size"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+value = 64.0
+rounded = true
+alignment = 2
+suffix = "px"
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Preview" type="Panel" parent="VBoxContainer/HBoxContainer/AspectRatioContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+script = ExtResource("2_qn7uf")
+config = SubResource("Resource_d1icl")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Cancel" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="Create" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Create"
