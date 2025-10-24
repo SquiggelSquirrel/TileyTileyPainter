@@ -14,7 +14,6 @@ func _ready() -> void:
 
 func reset() -> void:
 	config = DocumentConfig.new()
-	%Preview.config = config
 
 
 func write_values() -> void:

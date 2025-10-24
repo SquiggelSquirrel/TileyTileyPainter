@@ -1,18 +1,13 @@
-[gd_scene load_steps=10 format=3 uid="uid://dd62abvrwob6l"]
+[gd_scene load_steps=8 format=3 uid="uid://dd62abvrwob6l"]
 
 [ext_resource type="Script" uid="uid://y71t1nyojl0l" path="res://document_config_panel.gd" id="1_qn7uf"]
 [ext_resource type="Script" uid="uid://qrpxlba4k5rw" path="res://document_config.gd" id="2_d1icl"]
 [ext_resource type="Script" uid="uid://d1bq6vcfpo8d0" path="res://addons/spanning_table/spanning_table_container.gd" id="2_jtw0l"]
-[ext_resource type="Script" uid="uid://da2lt7saakbt0" path="res://document_config_preview.gd" id="2_qn7uf"]
 [ext_resource type="Script" uid="uid://bgyempry5d6vr" path="res://addons/spanning_table/spanning_cell_container.gd" id="3_cfcxd"]
 [ext_resource type="Script" uid="uid://c1helfll25hxl" path="res://document_config_panel/keep_aspect_ratio.gd" id="4_cfcxd"]
 [ext_resource type="Script" uid="uid://mh4sck7d7mhj" path="res://document_config_panel/link_margins.gd" id="5_ds5qy"]
 
 [sub_resource type="Resource" id="Resource_ds5qy"]
-script = ExtResource("2_d1icl")
-metadata/_custom_type_script = "uid://qrpxlba4k5rw"
-
-[sub_resource type="Resource" id="Resource_d1icl"]
 script = ExtResource("2_d1icl")
 metadata/_custom_type_script = "uid://qrpxlba4k5rw"
 
@@ -211,19 +206,6 @@ layout_mode = 2
 rounded = true
 alignment = 2
 suffix = "px"
-
-[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="AspectRatioContainer" type="AspectRatioContainer" parent="VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="Preview" type="Panel" parent="VBoxContainer/HBoxContainer/AspectRatioContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 200)
-layout_mode = 2
-script = ExtResource("2_qn7uf")
-config = SubResource("Resource_d1icl")
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
