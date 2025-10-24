@@ -1,11 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://cig0wf8uw1fp"]
+[gd_scene load_steps=5 format=3 uid="uid://cig0wf8uw1fp"]
 
-[ext_resource type="Script" uid="uid://cxxxqilll2pmm" path="res://new_document_window.gd" id="1_h2yge"]
-[ext_resource type="PackedScene" uid="uid://dd62abvrwob6l" path="res://document_config_panel.tscn" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://dqa6ui7xrhuba" path="res://main.gd" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://dv1qk0j2dsqgq" path="res://file_menu_button.gd" id="2_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://civct2n8w6ov0" path="res://new_document_window.tscn" id="2_h2yge"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dm0k"]
 
 [node name="Main" type="Node"]
+script = ExtResource("1_0xm2m")
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -41,10 +43,11 @@ popup/item_2/text = "Save"
 popup/item_2/id = 2
 popup/item_3/text = "Save As..."
 popup/item_3/id = 3
-popup/item_4/id = 7
+popup/item_4/id = 0
 popup/item_4/separator = true
 popup/item_5/text = "Exit"
-popup/item_5/id = 8
+popup/item_5/id = 4
+script = ExtResource("2_1bvp3")
 
 [node name="VSeparator" type="VSeparator" parent="UI/VBoxContainer/MenuBar/HFlowContainer"]
 layout_mode = 2
@@ -93,14 +96,40 @@ centered = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea/InputArea"]
 shape = SubResource("RectangleShape2D_7dm0k")
 
-[node name="NewDocumentWindow" type="Window" parent="UI"]
+[node name="NewDocumentWindow" parent="UI" instance=ExtResource("2_h2yge")]
+visible = false
+
+[node name="ConfirmQuitDialog" type="Window" parent="UI"]
 oversampling_override = 1.0
-title = "New Image..."
+title = "Quit"
 initial_position = 1
-size = Vector2i(476, 290)
+size = Vector2i(200, 155)
 wrap_controls = true
-script = ExtResource("1_h2yge")
 
-[node name="DocumentConfigPanel" parent="UI/NewDocumentWindow" instance=ExtResource("2_0xm2m")]
+[node name="PanelContainer" type="PanelContainer" parent="UI/ConfirmQuitDialog"]
+offset_right = 40.0
+offset_bottom = 40.0
 
-[connection signal="about_to_popup" from="UI/NewDocumentWindow" to="UI/NewDocumentWindow" method="_on_about_to_popup"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ConfirmQuitDialog/PanelContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/ConfirmQuitDialog/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="UI/ConfirmQuitDialog/PanelContainer/VBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(200, 120)
+layout_mode = 2
+text = "Really Quit?"
+fit_content = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/ConfirmQuitDialog/PanelContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Cancel" type="Button" parent="UI/ConfirmQuitDialog/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="Quit" type="Button" parent="UI/ConfirmQuitDialog/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Quit"
