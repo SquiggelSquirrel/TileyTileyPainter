@@ -1,5 +1,11 @@
 extends MenuButton
 
+signal new_requested
+signal open_requested
+signal save_requested
+signal save_dialog_requested
+signal quit_requested
+
 enum MenuIDs {NEW, OPEN, SAVE, SAVE_AS, EXIT}
 
 
@@ -10,12 +16,12 @@ func _ready() -> void:
 func _on_id_pressed(id :int) -> void:
 	match id:
 		MenuIDs.NEW:
-			pass
+			new_requested.emit()
 		MenuIDs.OPEN:
-			pass
+			open_requested.emit()
 		MenuIDs.SAVE:
-			pass
+			save_requested.emit()
 		MenuIDs.SAVE_AS:
-			pass
+			save_dialog_requested.emit()
 		MenuIDs.EXIT:
-			pass
+			quit_requested.emit()
