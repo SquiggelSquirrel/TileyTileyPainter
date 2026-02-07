@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://02tftscae8q1"]
+
+[node name="FileDialog" type="FileDialog" unique_id=2010271909]
+oversampling_override = 1.0
+title = "Open a File"
+initial_position = 1
+size = Vector2i(735, 360)
+visible = true
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.ttp;Project File;application/ttp")

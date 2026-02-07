@@ -1,14 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://cig0wf8uw1fp"]
+[gd_scene format=3 uid="uid://cig0wf8uw1fp"]
 
 [ext_resource type="Script" uid="uid://dqa6ui7xrhuba" path="res://main.gd" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://dv1qk0j2dsqgq" path="res://file_menu_button.gd" id="2_1bvp3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dm0k"]
 
-[node name="Main" type="Node"]
+[node name="Main" type="Node" unique_id=825058701]
 script = ExtResource("1_0xm2m")
 
-[node name="UI" type="Control" parent="."]
+[node name="UI" type="Control" parent="." unique_id=722577033]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -16,7 +16,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI" unique_id=513344568]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,13 +24,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MenuBar" type="PanelContainer" parent="UI/VBoxContainer"]
+[node name="MenuBar" type="PanelContainer" parent="UI/VBoxContainer" unique_id=851992902]
 layout_mode = 2
 
-[node name="HFlowContainer" type="HFlowContainer" parent="UI/VBoxContainer/MenuBar"]
+[node name="HFlowContainer" type="HFlowContainer" parent="UI/VBoxContainer/MenuBar" unique_id=549195520]
 layout_mode = 2
 
-[node name="File" type="MenuButton" parent="UI/VBoxContainer/MenuBar/HFlowContainer"]
+[node name="File" type="MenuButton" parent="UI/VBoxContainer/MenuBar/HFlowContainer" unique_id=1041286986]
 layout_mode = 2
 text = "File"
 item_count = 6
@@ -48,52 +48,53 @@ popup/item_5/text = "Exit"
 popup/item_5/id = 4
 script = ExtResource("2_1bvp3")
 
-[node name="VSeparator" type="VSeparator" parent="UI/VBoxContainer/MenuBar/HFlowContainer"]
+[node name="VSeparator" type="VSeparator" parent="UI/VBoxContainer/MenuBar/HFlowContainer" unique_id=1224906295]
 layout_mode = 2
 
-[node name="BrushLabel" type="Label" parent="UI/VBoxContainer/MenuBar/HFlowContainer"]
+[node name="BrushLabel" type="Label" parent="UI/VBoxContainer/MenuBar/HFlowContainer" unique_id=289773628]
 layout_mode = 2
 text = "Brush"
 
-[node name="SpinBox" type="SpinBox" parent="UI/VBoxContainer/MenuBar/HFlowContainer"]
+[node name="SpinBox" type="SpinBox" parent="UI/VBoxContainer/MenuBar/HFlowContainer" unique_id=1880136342]
 layout_mode = 2
 min_value = 1.0
 value = 1.0
 rounded = true
 alignment = 2
 
-[node name="ColorPickerButton" type="ColorPickerButton" parent="UI/VBoxContainer/MenuBar/HFlowContainer"]
+[node name="ColorPickerButton" type="ColorPickerButton" parent="UI/VBoxContainer/MenuBar/HFlowContainer" unique_id=865531856]
 clip_contents = true
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="UI/VBoxContainer"]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="UI/VBoxContainer" unique_id=624936391]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SubViewport" type="SubViewport" parent="UI/VBoxContainer/SubViewportContainer"]
+[node name="SubViewport" type="SubViewport" parent="UI/VBoxContainer/SubViewportContainer" unique_id=1888107293]
 handle_input_locally = false
 render_target_update_mode = 4
 
-[node name="WorkArea" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport"]
+[node name="WorkArea" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport" unique_id=1460515451]
 
-[node name="Camera2D" type="Camera2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea"]
+[node name="Camera2D" type="Camera2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea" unique_id=1264435509]
 
-[node name="WrapShadow" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea"]
+[node name="WrapShadow" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea" unique_id=1316913643]
 
-[node name="Layers" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea"]
+[node name="Layers" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea" unique_id=930196830]
 
-[node name="LayerGroup" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea/Layers"]
+[node name="LayerGroup" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea/Layers" unique_id=1430999954]
 
-[node name="PaintLayer" type="Sprite2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea/Layers"]
+[node name="PaintLayer" type="Sprite2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea/Layers" unique_id=721027160]
 centered = false
 
-[node name="Guides" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea"]
+[node name="Guides" type="Node2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea" unique_id=563541942]
 
-[node name="InputArea" type="Area2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea"]
+[node name="InputArea" type="Area2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea" unique_id=1960604507]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea/InputArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UI/VBoxContainer/SubViewportContainer/SubViewport/WorkArea/InputArea" unique_id=851651772]
 shape = SubResource("RectangleShape2D_7dm0k")
 
 [connection signal="new_requested" from="UI/VBoxContainer/MenuBar/HFlowContainer/File" to="." method="_on_file_new_requested"]
+[connection signal="open_requested" from="UI/VBoxContainer/MenuBar/HFlowContainer/File" to="." method="_on_file_open_requested"]
 [connection signal="quit_requested" from="UI/VBoxContainer/MenuBar/HFlowContainer/File" to="." method="_on_quit_requested"]
