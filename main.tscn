@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cig0wf8uw1fp"]
 
 [ext_resource type="Script" uid="uid://dqa6ui7xrhuba" path="res://main.gd" id="1_0xm2m"]
-[ext_resource type="Script" uid="uid://dv1qk0j2dsqgq" path="res://file_menu_button.gd" id="2_1bvp3"]
+[ext_resource type="Script" uid="uid://dv1qk0j2dsqgq" path="res://ui/file_menu_button.gd" id="2_1bvp3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dm0k"]
 

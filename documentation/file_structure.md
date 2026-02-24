@@ -1,8 +1,8 @@
-Document (document.json)
+Document (document.csv)
 ----
 save_version :String (int.int.int)
-atlases :Array (atlas)
-layers :Array (layer)
+atlases :Array (atlas) (model only)
+layers :Array (layer) (model only)
 
 Atlas (atlases.csv)
 ----

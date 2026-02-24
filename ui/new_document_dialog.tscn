@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://civct2n8w6ov0"]
+
+[ext_resource type="Script" uid="uid://cxxxqilll2pmm" path="res://ui/new_document_dialog.gd" id="1_xynv3"]
+[ext_resource type="PackedScene" uid="uid://dd62abvrwob6l" path="res://ui/document_config_panel/document_config_panel.tscn" id="2_1olyn"]
+
+[node name="NewDocumentWindow" type="Window" unique_id=472631586]
+oversampling_override = 1.0
+title = "New Image..."
+initial_position = 1
+size = Vector2i(269, 290)
+wrap_controls = true
+transient = true
+exclusive = true
+popup_window = true
+script = ExtResource("1_xynv3")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=754442879]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=1546091940]
+layout_mode = 2
+
+[node name="DocumentConfigPanel" parent="PanelContainer/VBoxContainer" unique_id=996804018 instance=ExtResource("2_1olyn")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=553506634]
+layout_mode = 2
+alignment = 1
+
+[node name="Cancel" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=744657395]
+layout_mode = 2
+text = "Cancel"
+
+[node name="Create" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=283704792]
+layout_mode = 2
+text = "Create"
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/HBoxContainer/Create" to="." method="_on_create_pressed"]

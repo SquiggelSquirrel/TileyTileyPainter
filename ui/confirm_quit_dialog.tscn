@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bsoo75364oajp"]
+[gd_scene format=3 uid="uid://bsoo75364oajp"]
 
-[ext_resource type="Script" uid="uid://ceymqkybu3oh3" path="res://confirm_quit_dialog.gd" id="1_qhr1f"]
+[ext_resource type="Script" uid="uid://ceymqkybu3oh3" path="res://ui/confirm_quit_dialog.gd" id="1_qhr1f"]
 
 [node name="ConfirmQuitDialog" type="Window"]
 oversampling_override = 1.0
