@@ -1,13 +1,20 @@
 extends Node
 
-enum Type {STRING, INT, VECTOR2I, ARRAY_FLOAT, BOOL}
+enum Type {
+		STRING,
+		INT,
+		VECTOR2I,
+		ARRAY_FLOAT,
+		ARRAY_INT,
+		BOOL}
 var parsers :Dictionary[Type, TypeParser] = {
-	Type.STRING: CSV_String.new(),
-	Type.INT: CSV_int.new(),
-	Type.VECTOR2I: CSV_Vector2i.new(),
-	Type.ARRAY_FLOAT: CSV_Array_float.new(),
-	Type.BOOL: CSV_bool.new()
-}
+		Type.STRING: CSV_String.new(),
+		Type.INT: CSV_int.new(),
+		Type.VECTOR2I: CSV_Vector2i.new(),
+		Type.ARRAY_FLOAT: CSV_Array_float.new(),
+		Type.ARRAY_INT: CSV_Array_int.new(),
+		Type.BOOL: CSV_bool.new()
+	}
 
 
 func get_parsing_errors(
@@ -18,7 +25,8 @@ func get_parsing_errors(
 	for i in table.get_rows_count():
 		for key in schema:
 			var raw_value := table.get_value(i, key)
-			var valid :bool = parsers[schema[key]].is_valid(raw_value)
+			var type := schema[key].type as Type
+			var valid :bool = parsers[type].is_valid(raw_value)
 			if ! valid:
 				errors.append(
 						"Invalid value for %s on row %s"
@@ -78,6 +86,26 @@ class CSV_Array_float extends TypeParser:
 
 
 	func stringify(input :PackedFloat32Array) -> String:
+		var parts := [] as PackedStringArray
+		for value in input:
+			parts.append(String.num(value))
+		return ":".join(parts)
+
+
+	func is_valid(input :String) -> bool:
+		return (input == stringify(parse(input)))
+
+
+class CSV_Array_int extends TypeParser:
+	func parse(input :String) -> PackedInt32Array:
+		var output := [] as PackedInt32Array
+		var parts := input.split (":")
+		for part in parts:
+			output.append(part.to_int())
+		return output
+
+
+	func stringify(input :PackedInt32Array) -> String:
 		var parts := [] as PackedStringArray
 		for value in input:
 			parts.append(String.num(value))

@@ -1,10 +1,14 @@
 class_name Atlas
 extends RefCounted
 
+const MARGIN_TOP := 0
+const MARGIN_RIGHT := 1
+const MARGIN_BOTTOM := 2
+const MARGIN_LEFT := 3
+
 var origin :Vector2i
+var tile_shapes_layout :TileShapesLayout
 var tile_size :Vector2i
+var tile_margins :PackedInt32Array
 var tile_spacing :Vector2i
-var cell_size: Vector2i
-# TODO: replace with reference to GridLayout object
-var grid_layout :StringName
 var tiles :Array[Tile]

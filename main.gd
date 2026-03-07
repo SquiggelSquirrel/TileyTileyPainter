@@ -4,7 +4,7 @@ extends Node
 const confirm_quit_dialog := preload("res://ui/confirm_quit_dialog.tscn")
 const new_document_dialog := preload("res://ui/new_document_dialog.tscn")
 const file_open_dialog := preload("res://ui/file_open_dialog.tscn")
-@export var document :DocumentConfig
+@export var document :Document
 
 
 func _ready() -> void:
@@ -41,7 +41,7 @@ func _on_file_new_requested() -> void:
 	dialog.create_requested.connect(_set_document)
 
 
-func _set_document(new_document :DocumentConfig) -> void:
+func _set_document(new_document :Document) -> void:
 	document = new_document
 
 
@@ -55,4 +55,4 @@ func _on_file_open_requested() -> void:
 func _on_file_open_confirmed(path: String) -> void:
 	# TODO
 	pass
-	#document = DocumentConfig.load(path)
+	#document = Document.load(path)

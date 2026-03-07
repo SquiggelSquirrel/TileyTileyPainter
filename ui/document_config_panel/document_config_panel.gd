@@ -1,6 +1,6 @@
 extends PanelContainer
 
-@export var config :DocumentConfig
+@export var config :Document
 
 
 func _ready() -> void:
@@ -13,7 +13,7 @@ func _ready() -> void:
 
 
 func reset() -> void:
-	config = DocumentConfig.new()
+	config = Document.new()
 
 
 func write_values() -> void:

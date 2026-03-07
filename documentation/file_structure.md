@@ -7,11 +7,11 @@ layers :Array (layer) (model only)
 Atlas (atlases.csv)
 ----
 atlas_id :int
-position :Vect2i
+origin :Vect2i
+tile_shapes_layout :StringName (needs to reference an application-defined tile shapes layout)
 tile_size :Vect2i
 tile_margins :IntArray (top, right, bottom, left)
 tile_spacing :Vect2i (horizontal/vertical)
-grid_layout :StringName (needs to reference a grid layout config)
 
 Tile (tiles.csv)
 ----
@@ -19,7 +19,7 @@ atlas_id :int
 shape_id :int
 position_in_atlas :Vector2i
 size_in_atlas :Vector2i
-animation_frame_count :int
+texture_origin :Vector2
 animation_frame_durations :float
 animation_columns :int
 

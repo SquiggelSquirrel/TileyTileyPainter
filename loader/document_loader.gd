@@ -1,7 +1,7 @@
 class_name DocumentLoader
 extends RefCounted
 
-signal load_complete(Document)
+signal load_complete
 signal error(String)
 var path :String
 
@@ -11,7 +11,7 @@ func _init(load_path :String) -> void:
 
 
 func begin() -> void:
-	var document := DocumentConfig.new()
+	var document := Document.new()
 	
 	var reader = ZIPReader.new()
 	reader.open(path)
@@ -20,23 +20,10 @@ func begin() -> void:
 	if table.get_rows_count() != 1:
 		error.emit("Failed to parse document.csv")
 		return
-	
 	var version := table.get_value(0, &"save_version")
 	if version != "0.0.0":
 		error.emit("Unsupported version " + version)
 		return
-	#var parts := version.split(".")
 	
-	load_complete.emit(document)
-
-	#var files = reader.get_files()
-	#for file_path2 in files:
-		## Skip directories
-		#if file_path2.ends_with("/"):
-			#continue
-		#
-		#var buffer = reader.read_file(file_path2)
-		#
-		#var image = Image.new()
-		#image.load_png_from_buffer(buffer)
+	load_complete.emit()
 	

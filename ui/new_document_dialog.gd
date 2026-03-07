@@ -1,10 +1,10 @@
 class_name NewDocumentDialog
 extends Window
-signal create_requested(DocumentConfig)
+signal create_requested(Document)
 
 
 func _ready() -> void:
-	%DocumentConfigPanel.config = DocumentConfig.new()
+	%DocumentConfigPanel.config = Document.new()
 
 
 func _on_close_requested() -> void:
