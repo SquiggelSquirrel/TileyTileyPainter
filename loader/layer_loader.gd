@@ -1,60 +1,96 @@
 class_name LayerLoader
-extends RefCounted
+extends Task
 
-signal load_complete
-signal error(String)
-const BASE_SCHEMA := {
-	"type": {"type": CSVParser.Type.STRING},
-	"name": {"type": CSVParser.Type.STRING},
-	"visible": {"type": CSVParser.Type.BOOL},
-	"parent_layer_index": {"type": CSVParser.Type.INT}
-}
-const PAINT_LAYERS_SCHEMA := {
-	"layer_index": {"type": CSVParser.Type.INT},
-	"file": {"type": CSVParser.Type.STRING},
-	"offset": {"type": CSVParser.Type.VECTOR2I}
-}
-const CLONE_LAYERS_SCHEMA := {
-	"layer_index": {"type": CSVParser.Type.INT},
-	"source_layer_index": {"type": CSVParser.Type.INT},
-	"offset": {"type": CSVParser.Type.VECTOR2I}
-}
-enum State {READY, LOADING, ERROR}
-var state := State.READY
+const MAIN_TABLE_FILENAME := "layers.csv"
+const PAINT_TABLE_FILENAME := "paint_layers.csv"
+const CLONE_TABLE_FILENAME := "clone_layers.csv"
+static var main_schema := {
+		"type": {
+			"type": CSVParser.Type.STRING,
+			"allowed_values": Layer.Type.keys()
+		},
+		"name": {
+			"type": CSVParser.Type.STRING
+		},
+		"visible": {
+			"type": CSVParser.Type.BOOL
+		},
+		"parent_layer_index": {
+			"type": CSVParser.Type.INT,
+			"min_value": 0
+		}
+	}
+static var paint_layers_schema := {
+		"layer_index": {
+			"type": CSVParser.Type.INT,
+			"min_value": 0
+		},
+		"file": {
+			"type": CSVParser.Type.STRING
+		},
+		"offset": {
+			"type": CSVParser.Type.VECTOR2I,
+			"non_negative": true
+		}
+	}
+static var clone_layers_schema := {
+		"layer_index": {
+			"type": CSVParser.Type.INT,
+			"min_value": 0
+		},
+		"source_layer_index": {
+			"type": CSVParser.Type.INT,
+			"min_value": 0
+		},
+		"offset": {
+			"type": CSVParser.Type.VECTOR2I
+		}
+	}
 var archive :ZIPReader
+var main_table_parser :CSVParser
+var paint_table_parser :CSVParser
+var clone_table_parser :CSVParser
 var layers :Array[Layer]
 
 
 func _init(zip_archive_reader :ZIPReader) -> void:
 	archive = zip_archive_reader
-
-
-func _on_error() -> void:
-	state = State.ERROR
+	main_table_parser = CSVParser.new(archive, MAIN_TABLE_FILENAME, main_schema)
+	main_table_parser.error.connect(_on_parser_error)
+	main_table_parser.done.connect(_on_main_table_parser_done)
 
 
 func begin() -> void:
-	error.connect(_on_error, CONNECT_ONE_SHOT)
-	state = State.LOADING
-	parse_main_table()
-	if state != State.ERROR:
-		parse_paint_table()
-	if state != State.ERROR:
-		parse_clone_table()
-	load_complete.emit()
+	main_table_parser.begin()
 
 
-func parse_main_table() -> void:
-	var main_table := ArchiveReaderCSV.new(archive, "layers.csv")
-	
-	var errors := CSVParser.get_parsing_errors(main_table, BASE_SCHEMA)
-	if errors.size() > 0:
-		error.emit("\n".join(errors))
-		return
-	
+func _on_main_table_load_complete() -> void:
+	paint_table_parser = CSVParser.new(archive, PAINT_TABLE_FILENAME, paint_layers_schema)
+	paint_table_parser.error.connect(_on_parser_error)
+	paint_table_parser.done.connect(_on_paint_table_parser_done)
+	paint_table_parser.begin()
+
+
+func _on_paint_table_load_complete() -> void:
+	clone_table_parser = CSVParser.new(archive, CLONE_TABLE_FILENAME, clone_layers_schema)
+	clone_table_parser.error.connect(_on_parser_error)
+	clone_table_parser.done.connect(_on_clone_table_parser_done)
+	clone_table_parser.begin()
+
+
+func _on_clone_table_load_complete() -> void:
+	done.emit()
+
+
+func _on_parser_error(messages :PackedStringArray) -> void:
+	throw_errors(messages)
+
+
+func _on_main_table_parser_done() -> void:
 	layers = []
-	for i in main_table.get_rows_count():
-		var type := main_table.get_value(i, &"type")
+	for i in main_table_parser.get_rows_count():
+		var row := main_table_parser.get_row(i)
+		var type := row["type"] as String
 		match type:
 			"Paint":
 				layers.append(PaintLayer.new())
@@ -68,85 +104,64 @@ func parse_main_table() -> void:
 						% [type, i])
 				return
 		
-		for key in BASE_SCHEMA:
-			if key == &"type":
+		for key in row:
+			var value = row[key]
+			if key == "type":
 				continue
-			var text := main_table.get_value(i, key)
-			var parser := CSVParser.parsers[BASE_SCHEMA[key].type]
-			var value = parser.parse(text)
-			if key == &"parent_layer_index":
-				if (
-						value < 0
-						or value >= i
-						or ! layers[value] is GroupLayer
-					):
-					error.emit("Invalid parent index on line %s" % [i])
+			elif key == "parent_layer_index":
+				if (value >= i or ! layers[value] is GroupLayer):
+					throw_error("Invalid parent index on line %s" % [i])
 					return
 				var parent_layer := (layers[value] as GroupLayer)
 				parent_layer.child_layers.append(layers[i])
 			else:
 				layers[i].set(key, value)
+	_on_main_table_load_complete()
 
 
-func parse_paint_table() -> void:
-	var paint_table := ArchiveReaderCSV.new(archive, "paint_layers.csv")
-	
-	var errors := CSVParser.get_parsing_errors(paint_table, PAINT_LAYERS_SCHEMA)
-	if errors.size() > 0:
-		error.emit("\n".join(errors))
-		return
-	
-	for i in paint_table.get_rows_count():
-		var layer_index :int = CSVParser.parsers[CSVParser.Type.INT].parse(
-				paint_table.get_value(i, &"layer_index"))
+func _on_paint_table_parser_done() -> void:
+	for i in paint_table_parser.get_rows_count():
+		var row := paint_table_parser.get_row(i)
 		if (
-				layer_index < 0
-				or layer_index >= layers.size()
-				or ! layers[layer_index] is PaintLayer
+				row.layer_index >= layers.size()
+				or ! layers[row.layer_index] is PaintLayer
 			):
 			error.emit("Invalid layer index on line %s" % [i])
 			return
-		var layer := layers[layer_index] as PaintLayer
+		var layer := layers[row.layer_index] as PaintLayer
 		
-		for key in PAINT_LAYERS_SCHEMA:
-			var text := paint_table.get_value(i, key)
-			var parser := CSVParser.parsers[PAINT_LAYERS_SCHEMA[key].type]
-			var value = parser.parse(text)
-			if key == &"file":
+		for key in row:
+			if key == "layer_index":
+				continue
+			var value = row[key]
+			if key == "file":
 				if ! archive.file_exists(value):
-					error.emit("Missing file '%s' at line %s" % [value, i])
+					throw_error("Missing file '%s' at line %s of paint layers" % [value, i])
 					return
 				var buffer := archive.read_file(value)
 				layer.image = Image.new()
 				var err := layer.image.load_png_from_buffer(buffer)
 				if err != OK:
-					error.emit("Error loading file '%s' at line %s" % [value, i])
+					throw_error("Error loading file '%s'" % [value])
 					return
 			else:
 				layer.set(key, value)
+	_on_paint_table_load_complete()
 
 
-func parse_clone_table() -> void:
-	var clone_table := ArchiveReaderCSV.new(archive, "clone_layers.csv")
-	
-	var errors := CSVParser.get_parsing_errors(clone_table, CLONE_LAYERS_SCHEMA)
-	if errors.size() > 0:
-		error.emit("\n".join(errors))
-		return
-	
-	for i in clone_table.get_rows_count():
-		var layer_index :int = CSVParser.parsers[CSVParser.Type.INT].parse(
-				clone_table.get_value(i, &"layer_index"))
+func _on_clone_table_parser_done() -> void:
+	for i in clone_table_parser.get_rows_count():
+		var row := clone_table_parser.get_row(i)
 		if (
-				layer_index < 0
-				or layer_index >= layers.size()
-				or ! layers[layer_index] is CloneLayer
+				row.layer_index >= layers.size()
+				or ! layers[row.layer_index] is CloneLayer
 			):
 			error.emit("Invalid layer index on line %s" % [i])
 			return
-		
-		for key in CLONE_LAYERS_SCHEMA:
-			var text := clone_table.get_value(i, key)
-			var parser := CSVParser.parsers[CLONE_LAYERS_SCHEMA[key].type]
-			var value = parser.parse(text)
-			layers[layer_index].set(key, value)
+		var layer := layers[row.layer_index] as CloneLayer
+		for key in row:
+			if key == "layer_index":
+				continue
+			var value = row[key]
+			layer.set(key, value)
+	_on_clone_table_load_complete()

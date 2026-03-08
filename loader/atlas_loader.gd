@@ -1,63 +1,84 @@
 class_name AtlasLoader
-extends RefCounted
+extends Task
 
-signal load_complete
-signal error(String)
-const SCHEMA := {
-		"origin": {"type": CSVParser.Type.VECTOR2I},
-		"tile_shapes_layout": {"type": CSVParser.Type.STRING},
-		"tile_size": {"type": CSVParser.Type.VECTOR2I},
-		"tile_margins": {"type": CSVParser.Type.ARRAY_INT},
-		"tile_spacing": {"type": CSVParser.Type.VECTOR2I}
-	}
+const FILENAME := "atlases.csv"
+static var schema := {}
 var archive :ZIPReader
+var parser :CSVParser
 var atlases :Array[Atlas]
 var _tile_loader :TileLoader
 
+
 func _init(zip_archive_reader :ZIPReader) -> void:
+	if schema.is_empty():
+		_init_schema()
 	archive = zip_archive_reader
+	parser = CSVParser.new(archive, FILENAME, schema)
+	parser.error.connect(_on_parser_error)
+	parser.done.connect(_on_parser_ready)
 
 
 func begin() -> void:
-	var table := ArchiveReaderCSV.new(archive, "atlases.csv")
-	
-	var errors := CSVParser.get_parsing_errors(table, SCHEMA)
-	if errors.size() > 0:
-		error.emit("\n".join(errors))
-		return
-	
+	parser.begin()
+
+
+func _init_schema() -> void:
+	schema = {
+		"origin": {
+			"type": CSVParser.Type.VECTOR2I
+		},
+		"tile_shapes_layout": {
+			"type": CSVParser.Type.STRING
+		},
+		"tile_size": {
+			"type": CSVParser.Type.VECTOR2I,
+			"non_negative": true
+		},
+		"tile_margins": {
+			"type": CSVParser.Type.ARRAY_INT,
+			"non_negative": true
+		},
+		"tile_spacing": {
+			"type": CSVParser.Type.VECTOR2I,
+			"non_negative": true
+		}
+	}
+	schema.tile_shapes_layout.set(
+			"allowed_values",
+			Application.tile_shapes_layouts.keys())
+
+
+func _on_parser_error() -> void:
+	throw_errors(parser.errors)
+
+
+func _on_parser_ready() -> void:
 	atlases = [] as Array[Atlas]
-	for i in table.get_rows_count():
+	for i in parser.get_rows_count():
 		var atlas = Atlas.new()
-		for key in SCHEMA:
-			var text := table.get_value(i, key)
-			var parser := CSVParser.parsers[SCHEMA[key].type]
+		var row := parser.get_row(i)
+		for key in row:
 			if key == &"tile_shapes_layout":
-				for tile_shapes_layout in Application.tile_shapes_layouts:
-					if tile_shapes_layout.name == key:
-						atlas.tile_shapes_layout = tile_shapes_layout
-						break
-				if ! atlas.tile_shapes_layout is TileShapesLayout:
-					error.emit("Invalid Tile Shapes Layout on row %s" % i)
-					return
+				atlas.tile_shapes_layout = (
+						Application.tile_shapes_layouts[row[key]])
 			else:
-				atlas.set(key, parser.parse(text))
+				atlas.set(key, row[key])
 		atlases.append(atlas)
 	
 	_tile_loader = TileLoader.new(archive, atlases)
-	_tile_loader.load_complete.connect(_on_tile_loader_load_complete)
+	_tile_loader.done.connect(_on_tile_loader_done)
 	_tile_loader.error.connect(_on_tile_loader_error)
 	_tile_loader.begin()
 
 
-func _on_tile_loader_load_complete() -> void:
+func _on_tile_loader_error(msg :String) -> void:
+	error.emit(msg)
+
+
+func _on_tile_loader_done() -> void:
 	if _tile_loader.tiles.size() > atlases.size():
 		error.emit("Tile atlas index exceeds number of atlases")
 		return
 	for i in atlases.size():
 		atlases[i].tiles = _tile_loader.tiles[i]
-	load_complete.emit()
-
-
-func _on_tile_loader_error(msg :String) -> void:
-	error.emit(msg)
+	done.emit()

@@ -21,7 +21,6 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-CSVParser="*uid://dkbe3wjib2mxn"
 Application="*uid://bt3l4pqu8qlan"
 
 [editor]

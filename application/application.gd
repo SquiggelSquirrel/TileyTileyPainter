@@ -1,3 +1,3 @@
 extends Node
 
-var tile_shapes_layouts :Array[TileShapesLayout]
+var tile_shapes_layouts :Dictionary[String, TileShapesLayout]

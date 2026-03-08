@@ -53,6 +53,10 @@ func _on_file_open_requested() -> void:
 
 
 func _on_file_open_confirmed(path: String) -> void:
-	# TODO
+	var document_loader := DocumentLoader.new(path)
+	document_loader.done.connect(_on_document_load_complete)
+	document_loader.begin()
+
+
+func _on_document_load_complete() -> void:
 	pass
-	#document = Document.load(path)
